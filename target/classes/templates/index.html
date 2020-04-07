@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Сервис заметок</title>
+
+
+    <script th:src="@{/angular1.6.7.min.js}"></script>
+    <script th:src="@{/main.js}"></script>
+    <script th:src="@{/jquery3.0.0.min.js}"></script>
+    <script th:src="@{/tether1.2.0.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/bootstrap4.0.0.min.css}">
+    <script th:src="@{/bootstrap4.0.0.min.js}"></script>
+
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.js"></script>-->
+<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">-->
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>-->
+<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>-->
+
+    <head>
+<body ng-app="NotesManagement" ng-controller="NotesController">
+<h3>
+    Тестовое задание "Сервис заметок"
+</h3>
+
+<div class="row">
+    <div class="col-xs-8">
+        <div class="row">
+            <div class="col-xs-4">
+                <button type="button" class="btn btn-primary btn-sm"  ng-click="createNote()">Добавить</button>
+            </div>
+            <div class="col-xs-8">
+                <div class="input-group">
+                    <input class="form-control form-control-sm" type="text" placeholder="Найти"  ng-model="textFilter">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-sm"  ng-click="filterNote()" >
+                            <svg class="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 011.415 0l3.85 3.85a1 1 0 01-1.414 1.415l-3.85-3.85a1 1 0 010-1.415z" clip-rule="evenodd"/>
+                                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM13 6.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </span>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-sm"  ng-click="notFilterNote()"  title="Отменить поиск">
+                        <svg class="bi bi-x" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 010 .708l-7 7a.5.5 0 01-.708-.708l7-7a.5.5 0 01.708 0z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 000 .708l7 7a.5.5 0 00.708-.708l-7-7a.5.5 0 00-.708 0z" clip-rule="evenodd"/>
+                        </svg>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-hover table-condensed">
+            <thead class="thead-inverse">
+            <tr >
+        <!--        <th>Id</th>-->
+                <th >Заголовок</th>
+                <th >Заметка</th>
+                <th > </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="note in notes" class="d-flex">
+        <!--        <td> {{ note.Id }}</td>-->
+                <td > {{ !note.caption ? note.textNote :  note.caption}}</td>
+                <td >  {{ note.textNote }}
+                </td>
+                <td >
+                    <button type="button" class="btn btn-success btn-sm" ng-click="editNote(note)" title="Редактировать">
+                        <svg class="bi bi-pencil" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M11.293 1.293a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-9 9a1 1 0 01-.39.242l-3 1a1 1 0 01-1.266-1.265l1-3a1 1 0 01.242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 00.5.5H4v.5a.5.5 0 00.5.5H5v.5a.5.5 0 00.5.5H6v-1.5a.5.5 0 00-.5-.5H5v-.5a.5.5 0 00-.5-.5H3z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" ng-click="deleteNoteModal(note)" title="Удалить">
+                        <svg class="bi bi-x" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 010 .708l-7 7a.5.5 0 01-.708-.708l7-7a.5.5 0 01.708 0z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 000 .708l7 7a.5.5 0 00.708-.708l-7-7a.5.5 0 00-.708 0z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+   </div>
+</div>
+
+
+<!--модальное окно создания/редактирования-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Сохранить заметку?</h4>
+                </div>
+                <div class="modal-body">
+                    <form ng-submit="submitNote()">
+<!--                            <div class="form-group">-->
+<!--                                <label for="noteForm-id" class="col-form-label">id</label>-->
+<!--                                <input type="text" ng-model="noteForm.id" class="form-control" id="noteForm-id"/>-->
+<!--                            </div>-->
+                        <div class="form-group">
+                            <label for="noteForm-caption" class="col-form-label">Заголовок</label>
+                            <input type="text" ng-model="noteForm.caption" class="form-control" id="noteForm-caption"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="noteForm-textNote" class="col-form-label">Заметка</label>
+                            <textarea rows="10" type="text" ng-model="noteForm.textNote" class="form-control"   id="noteForm-textNote"> </textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" ng-click="submitNote()" >Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!--модальное окно удаления-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="deleteModalLabel">Удалить заметку?</h4>
+                </div>
+                <div class="modal-body">
+                    <form ng-submit="submitNote()">
+<!--                            <div class="form-group">-->
+<!--                                <label for="noteFormDelete-id" class="col-form-label">id</label>-->
+<!--                                <input type="text" ng-model="noteFormDelete.id" class="form-control" readonly id="noteFormDelete-id"/>-->
+<!--                            </div>-->
+                            <div class="form-group">
+                                <label for="noteFormDelete-caption" class="col-form-label">Заголовок</label>
+                                <input type="text" ng-model="noteFormDelete.caption" class="form-control" readonly id="noteFormDelete-caption"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="noteFormDelete-textNote" class="col-form-label">Заметка</label>
+                                <textarea  rows="10"  type="text" ng-model="noteFormDelete.textNote" class="form-control"  readonly  id="noteFormDelete-textNote"> </textarea>
+                            </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" ng-click="deleteNote(noteFormDelete)" >Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
